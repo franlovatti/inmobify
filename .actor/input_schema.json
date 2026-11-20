@@ -21,38 +21,28 @@
         "Random Forest",
         "KNN Regressor"
       ],
-      "enumTitles": [
-        "#1 Ensamble Top-3 (CV MAPE: 32.72% | Recomendado)",
-        "#2 Gradient Boosting (CV MAPE: 33.07%)",
-        "#3 HuberRegressor (CV MAPE: 33.99% | Lineal Robusto)",
-        "#4 LightGBM (CV MAPE: 34.92%)",
-        "#5 ElasticNet (CV MAPE: 34.96%)",
-        "#6 Ridge (CV MAPE: 34.98%)",
-        "#7 Lasso (CV MAPE: 35.02%)",
-        "#8 XGBoost (CV MAPE: 35.37% | Mejor Test MAE/m²)",
-        "#9 SVR (RBF) (CV MAPE: 35.41% | Mejor Test Total)",
-        "#10 Random Forest (CV MAPE: 35.43%)",
-        "#11 KNN Regressor (CV MAPE: 37.03%)"
-      ],
       "editor": "select"
     },
     "modo_ejecucion": {
       "title": "Modo de Ejecución",
       "type": "string",
-      "description": "Elegí 'individual' para tasar 1 propiedad con los campos simples o 'lote' para procesar el array 'propiedades'.",
+      "description": "Elegí 'individual' para tasar 1 propiedad o 'lote' para procesar el array 'propiedades'.",
       "default": "individual",
       "enum": ["individual", "lote"],
-      "enumTitles": [
-        "Individual (1 propiedad desde campos individuales)",
-        "Lote / Batch (N propiedades desde array 'propiedades')"
-      ],
       "editor": "select"
+    },
+    "direccion": {
+      "title": "[Individual] Dirección en Rosario (Opcional)",
+      "type": "string",
+      "description": "Calle y altura o esquina en Rosario (ej. 'Bv. Oroño 850' o 'Av. Pellegrini 1420'). Si se completa, geocodifica las coordenadas automáticamente.",
+      "default": "Bv. Oroño 850",
+      "editor": "textfield"
     },
     "barrio": {
       "title": "[Individual] Barrio",
       "type": "string",
       "description": "Barrio de Rosario (ej. Centro, Pichincha, Pellegrini, Echesortu, Abasto, Martin).",
-      "default": "Centro",
+      "default": "Pichincha",
       "editor": "textfield"
     },
     "tipo_inmueble": {
@@ -72,17 +62,15 @@
       "editor": "number"
     },
     "latitud": {
-      "title": "[Individual] Latitud",
+      "title": "[Individual] Latitud (Opcional si se ingresa dirección o barrio)",
       "type": "number",
-      "description": "Coordenada geográfica de latitud en Rosario.",
-      "default": -32.9468,
+      "description": "Coordenada geográfica de latitud en Rosario (opcional).",
       "editor": "number"
     },
     "longitud": {
-      "title": "[Individual] Longitud",
+      "title": "[Individual] Longitud (Opcional si se ingresa dirección o barrio)",
       "type": "number",
-      "description": "Coordenada geográfica de longitud en Rosario.",
-      "default": -60.6393,
+      "description": "Coordenada geográfica de longitud en Rosario (opcional).",
       "editor": "number"
     },
     "tiene_expensas": {
@@ -97,15 +85,22 @@
     "precio_publicado_usd": {
       "title": "[Individual] Precio Publicado USD (Opcional)",
       "type": "number",
-      "description": "Precio mensual pedido en USD para evaluar si representa una oportunidad de mercado (0 para omitir).",
+      "description": "Precio mensual pedido en USD para evaluar oportunidad de mercado (0 para omitir).",
       "default": 600,
       "minimum": 0,
       "editor": "number"
     },
+    "google_maps_api_key": {
+      "title": "Google Maps API Key (Opcional)",
+      "type": "string",
+      "description": "Clave opcional de Google Geocoding API. Si se deja vacía, se usa OpenStreetMap (Nominatim) de forma gratuita.",
+      "isSecret": true,
+      "editor": "textfield"
+    },
     "propiedades": {
       "title": "[Lote / Make / API] Lista de Propiedades a Tasar",
       "type": "array",
-      "description": "Array JSON de propiedades para inferencia en lote (o 1 elemento desde Make/Streamlit).",
+      "description": "Array JSON de propiedades. Cada objeto acepta: row_number, id_consulta, direccion, barrio, tipo_inmueble, superficie_m2, latitud, longitud, tiene_expensas, precio_publicado_usd.",
       "default": [],
       "editor": "json"
     }

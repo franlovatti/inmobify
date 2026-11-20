@@ -50,6 +50,7 @@ async def main() -> None:
         modelo_elegido = actor_input.get("modelo_elegido", "Ensamble Top-3")
         modo = actor_input.get("modo_ejecucion", "individual")
         propiedades_lote = actor_input.get("propiedades") or []
+        google_api_key = (actor_input.get("google_maps_api_key") or "").strip() or None
 
         # 1. Resolver registros de entrada (soporta Lote o Individual)
         if isinstance(propiedades_lote, list) and len(propiedades_lote) > 0:
@@ -58,11 +59,12 @@ async def main() -> None:
         elif modo == "individual" or actor_input.get("superficie_m2") is not None:
             registros = [{
                 "id_consulta": actor_input.get("id_consulta", "IND-001"),
-                "barrio": actor_input.get("barrio", "Centro"),
+                "direccion": actor_input.get("direccion", ""),
+                "barrio": actor_input.get("barrio", ""),
                 "tipo_inmueble": actor_input.get("tipo_inmueble", "Local comercial"),
                 "superficie_m2": actor_input.get("superficie_m2", 65),
-                "latitud": actor_input.get("latitud", -32.9468),
-                "longitud": actor_input.get("longitud", -60.6393),
+                "latitud": actor_input.get("latitud"),
+                "longitud": actor_input.get("longitud"),
                 "tiene_expensas": actor_input.get("tiene_expensas", 1),
                 "precio_publicado_usd": actor_input.get("precio_publicado_usd", None),
             }]
@@ -112,9 +114,9 @@ async def main() -> None:
             txt_c = comercios_raw.decode("utf-8") if isinstance(comercios_raw, bytes) else str(comercios_raw)
             df_comercios = pd.read_csv(io.StringIO(txt_c))
 
-        # 5. Ingeniería de features y predicción
+        # 5. Ingeniería de features (geocodificación + entorno comercial) y predicción
         df_in = pd.DataFrame(registros)
-        df_feat = construir_features_inferencia(df_in, df_comercios)
+        df_feat = construir_features_inferencia(df_in, df_comercios, google_api_key=google_api_key)
         X_infer = df_feat[COLS_MODELO]
 
         preds_usd = modelo.predict(X_infer)
@@ -135,7 +137,11 @@ async def main() -> None:
             resultados.append({
                 "row_number": int(row["row_number"]) if pd.notna(row.get("row_number")) else None,
                 "id_consulta": str(row.get("id_consulta", f"PROP-{idx+1:03d}")),
+                "direccion_ingresada": str(row.get("direccion", "") or "").strip() or None,
                 "barrio": row["barrio"],
+                "latitud_usada": float(row["latitud_resuelta"]),
+                "longitud_usada": float(row["longitud_resuelta"]),
+                "origen_coordenadas": row["origen_coordenadas"],
                 "tipo_inmueble": row["tipo_inmueble"],
                 "superficie_m2": round(float(row["superficie_m2"]), 1),
                 "tiene_expensas": int(row["tiene_expensas"]),
@@ -156,6 +162,7 @@ async def main() -> None:
         await Actor.push_data(resultados)
         await kv.set_value("ultima_inferencia_inmobify.json", json.dumps(resultados, indent=2, ensure_ascii=False))
         Actor.log.info(f"Inferencia finalizada con éxito: {len(resultados)} tasaciones publicadas.")
+
 
 if __name__ == "__main__":
     asyncio.run(main())
