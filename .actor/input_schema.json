@@ -3,13 +3,6 @@
   "type": "object",
   "schemaVersion": 1,
   "properties": {
-    "kv_store_name": {
-      "title": "Nombre del Key-Value Store",
-      "type": "string",
-      "description": "Key-Value Store donde residen maestro_comercios_rosario.csv y donde se guarda el respaldo de inferencia.",
-      "default": "inmobify-storage",
-      "editor": "textfield"
-    },
     "modelo_elegido": {
       "title": "Modelo de Machine Learning",
       "type": "string",

@@ -13,6 +13,7 @@ from .model_defs import cargar_modelo_seguro
 BASE_DIR = Path(__file__).resolve().parent.parent
 DIR_MODELOS = BASE_DIR / "modelos_entrenados"
 RUTA_META = BASE_DIR / "modelos_ranking_meta.json"
+KV_STORE_NAME = "inmobify-storage"
 
 COLS_MODELO = [
     "log_superficie_m2",
@@ -44,7 +45,7 @@ async def main() -> None:
     async with Actor:
         actor_input = await Actor.get_input() or {}
 
-        kv_store_name = actor_input.get("kv_store_name", "inmobify-storage")
+        kv_store_name = KV_STORE_NAME
         modelo_elegido = actor_input.get("modelo_elegido", "Ensamble Top-3")
         modo = actor_input.get("modo_ejecucion", "individual")
         propiedades_lote = actor_input.get("propiedades") or []
