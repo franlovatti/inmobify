@@ -1,8 +1,85 @@
 {
-    "$schema": "https://apify.com/schemas/v1/input.ide.json",
-    "title": "Actor input",
-    "type": "object",
-    "schemaVersion": 1,
-    "properties": {},
-    "required": []
+  "title": "Inmobify Rosario — Pipeline ETL, EDA e Inferencia",
+  "description": "Configuración de ejecución para el pipeline semanal de inteligencia inmobiliaria y comercial (operation: 'analytics') o tasación puntual bajo demanda (operation: 'inference').",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "operation": {
+      "title": "Operación a ejecutar",
+      "type": "string",
+      "description": "Seleccioná 'analytics' para el flujo semanal completo (ETL + Caché Maps + EDA) o 'inference' para tasar una propiedad puntual.",
+      "default": "analytics",
+      "enum": [
+        "analytics",
+        "inference"
+      ],
+      "enumTitles": [
+        "Analytics (Flujo semanal: ETL + Maps TTL + EDA)",
+        "Inference (Tasación puntual en tiempo real)"
+      ],
+      "editor": "select"
+    },
+    "usar_ultimo_run_zp": {
+      "title": "Modo prueba: reutilizar último run de Zonaprop",
+      "type": "boolean",
+      "description": "Si está marcado, recupera el último dataset exitoso de Zonaprop sin consumir créditos nuevos. Desmarcar en producción.",
+      "default": false,
+      "editor": "checkbox"
+    },
+    "apify_token": {
+      "title": "Apify API Token (opcional)",
+      "type": "string",
+      "description": "Solo completar si querés invocar los scrapers con otra cuenta distinta a la dueña de este Actor.",
+      "editor": "textfield",
+      "isSecret": true
+    },
+    "lat": {
+      "title": "Latitud (solo para inference)",
+      "type": "number",
+      "description": "Latitud geográfica de la propiedad a tasar en Rosario / Gran Rosario (ej: -32.9468).",
+      "default": -32.9468,
+      "editor": "number"
+    },
+    "lon": {
+      "title": "Longitud (solo para inference)",
+      "type": "number",
+      "description": "Longitud geográfica de la propiedad a tasar en Rosario / Gran Rosario (ej: -60.6393).",
+      "default": -60.6393,
+      "editor": "number"
+    },
+    "superficie_m2": {
+      "title": "Superficie en m² (solo para inference)",
+      "type": "number",
+      "description": "Superficie total del local u oficina en metros cuadrados.",
+      "default": 85,
+      "editor": "number"
+    },
+    "tipo_inmueble": {
+      "title": "Tipo de inmueble (solo para inference)",
+      "type": "string",
+      "description": "Categoría comercial de la propiedad.",
+      "default": "Locales Comerciales",
+      "enum": [
+        "Locales Comerciales",
+        "Oficinas comerciales"
+      ],
+      "editor": "select"
+    },
+    "barrio": {
+      "title": "Barrio (solo para inference)",
+      "type": "string",
+      "description": "Nombre del barrio en Rosario o localidad del Gran Rosario (ej: Centro, Pichincha, Echesortu, Fisherton).",
+      "default": "Centro",
+      "editor": "textfield"
+    },
+    "precio_publicado_usd": {
+      "title": "Precio publicado en USD (opcional, solo para inference)",
+      "type": "number",
+      "description": "Si se informa, el sistema calcula el desvío porcentual respecto al valor estimado y clasifica en OPORTUNIDAD, EN PRECIO o SOBREVALUADO.",
+      "editor": "number"
+    }
+  },
+  "required": [
+    "operation"
+  ]
 }
