@@ -3,6 +3,7 @@ import io
 import json
 from datetime import datetime, timezone
 from pathlib import Path
+import asyncio
 
 import pandas as pd
 from apify import Actor
@@ -155,3 +156,6 @@ async def main() -> None:
         await Actor.push_data(resultados)
         await kv.set_value("ultima_inferencia_inmobify.json", json.dumps(resultados, indent=2, ensure_ascii=False))
         Actor.log.info(f"Inferencia finalizada con éxito: {len(resultados)} tasaciones publicadas.")
+
+if __name__ == "__main__":
+    asyncio.run(main())
