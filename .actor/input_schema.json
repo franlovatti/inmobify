@@ -6,7 +6,7 @@
     "kv_store_name": {
       "title": "Nombre del Key-Value Store",
       "type": "string",
-      "description": "Key-Value Store donde residen los modelos .pkl, modelos_ranking_meta.json y maestro_comercios_rosario.csv.",
+      "description": "Key-Value Store donde residen maestro_comercios_rosario.csv y donde se guarda el respaldo de inferencia.",
       "default": "inmobify-storage",
       "editor": "textfield"
     },
@@ -65,6 +65,7 @@
     "tipo_inmueble": {
       "title": "[Individual] Tipo de Inmueble",
       "type": "string",
+      "description": "Categoría edilicia de la propiedad comercial a tasar.",
       "default": "Local comercial",
       "enum": ["Local comercial", "Oficina"],
       "editor": "select"
@@ -72,6 +73,7 @@
     "superficie_m2": {
       "title": "[Individual] Superficie Total (m²)",
       "type": "number",
+      "description": "Superficie total en metros cuadrados de la propiedad.",
       "default": 65,
       "minimum": 5,
       "editor": "number"
@@ -79,26 +81,30 @@
     "latitud": {
       "title": "[Individual] Latitud",
       "type": "number",
+      "description": "Coordenada geográfica de latitud en Rosario.",
       "default": -32.9468,
       "editor": "number"
     },
     "longitud": {
       "title": "[Individual] Longitud",
       "type": "number",
+      "description": "Coordenada geográfica de longitud en Rosario.",
       "default": -60.6393,
       "editor": "number"
     },
     "tiene_expensas": {
       "title": "[Individual] ¿Tiene Expensas? (1 = Sí, 0 = No)",
       "type": "integer",
+      "description": "Indicador binario de si el inmueble abona expensas (1 = Sí, 0 = No).",
       "default": 1,
       "minimum": 0,
       "maximum": 1,
       "editor": "number"
     },
     "precio_publicado_usd": {
-      "title": "[Individual] Precio Publicado USD (Opcional para diagnóstico)",
+      "title": "[Individual] Precio Publicado USD (Opcional)",
       "type": "number",
+      "description": "Precio mensual pedido en USD para evaluar si representa una oportunidad de mercado (0 para omitir).",
       "default": 600,
       "minimum": 0,
       "editor": "number"
@@ -106,7 +112,7 @@
     "propiedades": {
       "title": "[Lote / Make / API] Lista de Propiedades a Tasar",
       "type": "array",
-      "description": "Array JSON de propiedades para inferencia en lote (o 1 elemento desde Make/Streamlit). Cada objeto acepta: row_number, id_consulta, barrio, tipo_inmueble, superficie_m2, latitud, longitud, tiene_expensas, precio_publicado_usd.",
+      "description": "Array JSON de propiedades para inferencia en lote (o 1 elemento desde Make/Streamlit).",
       "default": [],
       "editor": "json"
     }
