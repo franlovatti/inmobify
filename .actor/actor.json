@@ -1,12 +1,11 @@
 {
   "actorSpecification": 1,
-  "name": "inmobify-pipeline",
-  "title": "Inmobify Rosario — Pipeline ETL, EDA e Inferencia",
-  "description": "Orquestador semanal de datos inmobiliarios (Zonaprop) y densidad comercial (Google Maps con TTL) + tasación puntual.",
-  "version": "1.0",
-  "buildTag": "latest",
+  "name": "inmobify-inference",
+  "title": "Inmobify Inference — Tasador Comercial Rosario (Individual & Lote)",
+  "description": "Actor de inferencia ML para valuación de alquileres comerciales en Rosario. Soporta tasación individual o en lote, selección dinámica entre 11 modelos entrenados y enriquecimiento geoespacial Haversine.",
+  "version": "1.0.0",
   "meta": {
-    "templateId": "python-sdk"
+    "templateId": "python-start"
   },
   "input": "./input_schema.json",
   "dockerfile": "../Dockerfile"

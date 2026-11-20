@@ -1,85 +1,114 @@
 {
-  "title": "Inmobify Rosario — Pipeline ETL, EDA e Inferencia",
-  "description": "Configuración de ejecución para el pipeline semanal de inteligencia inmobiliaria y comercial (operation: 'analytics') o tasación puntual bajo demanda (operation: 'inference').",
+  "title": "Inmobify Inference Input",
   "type": "object",
   "schemaVersion": 1,
   "properties": {
-    "operation": {
-      "title": "Operación a ejecutar",
+    "kv_store_name": {
+      "title": "Nombre del Key-Value Store",
       "type": "string",
-      "description": "Seleccioná 'analytics' para el flujo semanal completo (ETL + Caché Maps + EDA) o 'inference' para tasar una propiedad puntual.",
-      "default": "analytics",
+      "description": "Key-Value Store donde residen los modelos .pkl, modelos_ranking_meta.json y maestro_comercios_rosario.csv.",
+      "default": "inmobify-storage",
+      "editor": "textfield"
+    },
+    "modelo_elegido": {
+      "title": "Modelo de Machine Learning",
+      "type": "string",
+      "description": "Seleccioná el modelo entrenado a utilizar para la predicción.",
+      "default": "Ensamble Top-3",
       "enum": [
-        "analytics",
-        "inference"
+        "Ensamble Top-3",
+        "Gradient Boosting",
+        "HuberRegressor",
+        "LightGBM",
+        "ElasticNet",
+        "Ridge",
+        "Lasso",
+        "XGBoost",
+        "SVR (RBF)",
+        "Random Forest",
+        "KNN Regressor"
       ],
       "enumTitles": [
-        "Analytics (Flujo semanal: ETL + Maps TTL + EDA)",
-        "Inference (Tasación puntual en tiempo real)"
+        "#1 Ensamble Top-3 (CV MAPE: 32.72% | Recomendado)",
+        "#2 Gradient Boosting (CV MAPE: 33.07%)",
+        "#3 HuberRegressor (CV MAPE: 33.99% | Lineal Robusto)",
+        "#4 LightGBM (CV MAPE: 34.92%)",
+        "#5 ElasticNet (CV MAPE: 34.96%)",
+        "#6 Ridge (CV MAPE: 34.98%)",
+        "#7 Lasso (CV MAPE: 35.02%)",
+        "#8 XGBoost (CV MAPE: 35.37% | Mejor Test MAE/m²)",
+        "#9 SVR (RBF) (CV MAPE: 35.41% | Mejor Test Total)",
+        "#10 Random Forest (CV MAPE: 35.43%)",
+        "#11 KNN Regressor (CV MAPE: 37.03%)"
       ],
       "editor": "select"
     },
-    "usar_ultimo_run_zp": {
-      "title": "Modo prueba: reutilizar último run de Zonaprop",
-      "type": "boolean",
-      "description": "Si está marcado, recupera el último dataset exitoso de Zonaprop sin consumir créditos nuevos. Desmarcar en producción.",
-      "default": false,
-      "editor": "checkbox"
-    },
-    "apify_token": {
-      "title": "Apify API Token (opcional)",
+    "modo_ejecucion": {
+      "title": "Modo de Ejecución",
       "type": "string",
-      "description": "Solo completar si querés invocar los scrapers con otra cuenta distinta a la dueña de este Actor.",
-      "editor": "textfield",
-      "isSecret": true
-    },
-    "lat": {
-      "title": "Latitud (solo para inference)",
-      "type": "number",
-      "description": "Latitud geográfica de la propiedad a tasar en Rosario / Gran Rosario (ej: -32.9468).",
-      "default": -32.9468,
-      "editor": "number"
-    },
-    "lon": {
-      "title": "Longitud (solo para inference)",
-      "type": "number",
-      "description": "Longitud geográfica de la propiedad a tasar en Rosario / Gran Rosario (ej: -60.6393).",
-      "default": -60.6393,
-      "editor": "number"
-    },
-    "superficie_m2": {
-      "title": "Superficie en m² (solo para inference)",
-      "type": "number",
-      "description": "Superficie total del local u oficina en metros cuadrados.",
-      "default": 85,
-      "editor": "number"
-    },
-    "tipo_inmueble": {
-      "title": "Tipo de inmueble (solo para inference)",
-      "type": "string",
-      "description": "Categoría comercial de la propiedad.",
-      "default": "Locales Comerciales",
-      "enum": [
-        "Locales Comerciales",
-        "Oficinas comerciales"
+      "description": "Elegí 'individual' para tasar 1 propiedad con los campos simples o 'lote' para procesar el array 'propiedades'.",
+      "default": "individual",
+      "enum": ["individual", "lote"],
+      "enumTitles": [
+        "Individual (1 propiedad desde campos individuales)",
+        "Lote / Batch (N propiedades desde array 'propiedades')"
       ],
       "editor": "select"
     },
     "barrio": {
-      "title": "Barrio (solo para inference)",
+      "title": "[Individual] Barrio",
       "type": "string",
-      "description": "Nombre del barrio en Rosario o localidad del Gran Rosario (ej: Centro, Pichincha, Echesortu, Fisherton).",
+      "description": "Barrio de Rosario (ej. Centro, Pichincha, Pellegrini, Echesortu, Abasto, Martin).",
       "default": "Centro",
       "editor": "textfield"
     },
-    "precio_publicado_usd": {
-      "title": "Precio publicado en USD (opcional, solo para inference)",
+    "tipo_inmueble": {
+      "title": "[Individual] Tipo de Inmueble",
+      "type": "string",
+      "default": "Local comercial",
+      "enum": ["Local comercial", "Oficina"],
+      "editor": "select"
+    },
+    "superficie_m2": {
+      "title": "[Individual] Superficie Total (m²)",
       "type": "number",
-      "description": "Si se informa, el sistema calcula el desvío porcentual respecto al valor estimado y clasifica en OPORTUNIDAD, EN PRECIO o SOBREVALUADO.",
+      "default": 65,
+      "minimum": 5,
       "editor": "number"
+    },
+    "latitud": {
+      "title": "[Individual] Latitud",
+      "type": "number",
+      "default": -32.9468,
+      "editor": "number"
+    },
+    "longitud": {
+      "title": "[Individual] Longitud",
+      "type": "number",
+      "default": -60.6393,
+      "editor": "number"
+    },
+    "tiene_expensas": {
+      "title": "[Individual] ¿Tiene Expensas? (1 = Sí, 0 = No)",
+      "type": "integer",
+      "default": 1,
+      "minimum": 0,
+      "maximum": 1,
+      "editor": "number"
+    },
+    "precio_publicado_usd": {
+      "title": "[Individual] Precio Publicado USD (Opcional para diagnóstico)",
+      "type": "number",
+      "default": 600,
+      "minimum": 0,
+      "editor": "number"
+    },
+    "propiedades": {
+      "title": "[Lote / Make / API] Lista de Propiedades a Tasar",
+      "type": "array",
+      "description": "Array JSON de propiedades para inferencia en lote (o 1 elemento desde Make/Streamlit). Cada objeto acepta: row_number, id_consulta, barrio, tipo_inmueble, superficie_m2, latitud, longitud, tiene_expensas, precio_publicado_usd.",
+      "default": [],
+      "editor": "json"
     }
-  },
-  "required": [
-    "operation"
-  ]
+  }
 }
