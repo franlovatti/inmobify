@@ -53,12 +53,12 @@ El servicio de inferencia conecta **Google Sheets**, **Make**, **Apify** y **Str
 
 ## 🧠 Modelado Predictivo, Resolución Geográfica y Métricas
 
-### 1. Catálogo de Modelos Entrenados (11 Estimadores Serializados)
+### 1. Catálogo de Modelos Entrenados
 
-El Actor empaqueta en `modelos_entrenados/` los **11 modelos entrenados** sobre el dataset curado de Rosario (`477` propiedades comerciales), validados mediante validación cruzada (`5-Fold CV`) y conjunto de prueba (`Test 20%`), con verificación criptográfica **SHA-256** antes de su deserialización segura (`model_defs.py`):
+El Actor empaqueta en `modelos_entrenados/` los **modelos entrenados** sobre el dataset curado de Rosario (`477` propiedades comerciales), validados mediante validación cruzada (`5-Fold CV`) y conjunto de prueba (`Test 20%`), con verificación criptográfica **SHA-256** antes de su deserialización segura (`model_defs.py`):
 
-* **Modelo Recomendado por Defecto:** **`Ensamble Top-3`** (`VotingRegressor` compuesto por `Gradient Boosting`, `HuberRegressor` y `LightGBM` con transformación logarítmica `TransformedTargetRegressor` sobre `log1p(precio_usd)`).
-* **Modelos Disponibles para Selección:** `Ensamble Top-3`, `Gradient Boosting`, `HuberRegressor`, `LightGBM`, `ElasticNet`, `Ridge`, `Lasso`, `XGBoost`, `SVR (RBF)`, `Random Forest` y `KNN Regressor`.
+* **Modelo seleccionado:** **`Ensamble Top-3`** (`VotingRegressor` compuesto por `Gradient Boosting`, `HuberRegressor` y `LightGBM` con transformación logarítmica `TransformedTargetRegressor` sobre `log1p(precio_usd)`).
+* **Modelos comparados para la seleccion:** `Ensamble Top-3`, `Gradient Boosting`, `HuberRegressor`, `LightGBM`, `ElasticNet`, `Ridge`, `Lasso`, `XGBoost`, `SVR (RBF)`, `Random Forest` y `KNN Regressor`.
 
 ### 2. Resolución Geográfica Inteligente (Cero Fricción y Cero Contradicciones)
 
@@ -92,8 +92,7 @@ inmobify-inference/
 │   ├── actor.json                  # Metadatos y configuración del Actor en Apify
 │   └── input_schema.json           # Esquema de entrada (modo individual/lote, dirección, barrio, modelo)
 ├── modelos_entrenados/
-│   ├── modelo_ensamble_top_3.pkl   # Modelo campeón empaquetado (VotingRegressor Top-3)
-│   └── ... (10 modelos .pkl)       # Modelos individuales entrenados en scikit-learn / XGBoost / LightGBM
+│   └── modelo_ensamble_top_3.pkl   # Modelo campeón empaquetado (VotingRegressor Top-3)
 ├── src/
 │   ├── __init__.py                 # Inicialización del paquete fuente
 │   ├── __main__.py                 # Soporte para ejecución como módulo (python -m src.main)
@@ -120,8 +119,6 @@ Creá un archivo `storage/key_value_stores/default/INPUT.json` con una consulta 
 
 ```json
 {
-  "kv_store_name": "inmobify-storage",
-  "modelo_elegido": "Ensamble Top-3",
   "modo_ejecucion": "individual",
   "direccion": "Bv. Oroño 850",
   "tipo_inmueble": "Local comercial",
