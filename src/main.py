@@ -47,7 +47,7 @@ async def main() -> None:
         actor_input = await Actor.get_input() or {}
 
         kv_store_name = KV_STORE_NAME
-        modelo_elegido = actor_input.get("modelo_elegido", "Ensamble Top-3")
+        modelo_elegido = "Ensamble Top-3"
         modo = actor_input.get("modo_ejecucion", "individual")
         propiedades_lote = actor_input.get("propiedades") or []
         google_api_key = (actor_input.get("google_maps_api_key") or "").strip() or None

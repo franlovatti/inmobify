@@ -3,26 +3,6 @@
   "type": "object",
   "schemaVersion": 1,
   "properties": {
-    "modelo_elegido": {
-      "title": "Modelo de Machine Learning",
-      "type": "string",
-      "description": "Seleccioná el modelo entrenado a utilizar para la predicción.",
-      "default": "Ensamble Top-3",
-      "enum": [
-        "Ensamble Top-3",
-        "Gradient Boosting",
-        "HuberRegressor",
-        "LightGBM",
-        "ElasticNet",
-        "Ridge",
-        "Lasso",
-        "XGBoost",
-        "SVR (RBF)",
-        "Random Forest",
-        "KNN Regressor"
-      ],
-      "editor": "select"
-    },
     "modo_ejecucion": {
       "title": "Modo de Ejecución",
       "type": "string",
