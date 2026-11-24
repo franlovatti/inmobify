@@ -1,12 +1,13 @@
 {
-    "$schema": "https://apify.com/schemas/v1/output.ide.json",
-    "actorOutputSchemaVersion": 1,
-    "title": "Output schema",
-    "properties": {
-        "results": {
-            "type": "string",
-            "title": "Results",
-            "template": "{{links.apiDefaultDatasetUrl}}/items"
-        }
+  "actorOutputSchemaVersion": 1,
+  "title": "Resultados de Tasación Comercial (Inmobify)",
+  "description": "Esquema de salida con las valuaciones en USD, métricas espaciales del entorno comercial y diagnóstico de mercado.",
+  "properties": {
+    "tasaciones": {
+      "type": "string",
+      "title": "Tabla de Tasaciones Predictivas",
+      "description": "Registros generados en el Dataset por defecto con el alquiler estimado (USD/mes y USD/m²), densidad comercial a 200 m y diagnóstico.",
+      "template": "{{links.apiDefaultDatasetUrl}}/items"
     }
+  }
 }
